@@ -1,0 +1,23 @@
+name: 'Close Issue Condition Workflows'
+
+on: // 이슈에 코멘트가 새로 달렸을 경우
+  issues_comment: 
+    types: [ created ]
+
+jobs: 
+  close-issue:
+    name: 'Close Issue Job' 
+    if: context.payload.comment.body == '/close'
+    runs-on: ubuntu-latest
+
+    steps: // 이슈 닫기
+    - name: Closed Issue
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.update({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'closed'
+          })
